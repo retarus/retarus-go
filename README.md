@@ -4,7 +4,7 @@ The offical Golang SDK provided by Retarus to contact our messaging services.
 
 
 # Quickstart
-## Send an example fax job
+### Send an example fax job
 ```golang
 package example
 
@@ -46,7 +46,7 @@ func main() {
 }
 ```
 
-## Send an example sms job
+### Send an example sms job
 ```golang
 package example
 
