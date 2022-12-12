@@ -4,6 +4,7 @@ The offical Golang SDK provided by Retarus to contact our messaging services.
 
 
 # Quickstart
+## Send an example fax job
 ```golang
 package example
 
@@ -34,6 +35,45 @@ func main() {
 				Charset:   fax.UTF_8,
 				Reference: "testJob",
 				Data:      "dGVzdGZheAo=", // testfax
+			},
+		},
+	}
+
+	jobID, err := client.Send(job)
+	if err != nil {
+		// log error message
+	}
+}
+```
+
+## Send an example sms job
+```golang
+package example
+
+import (
+	github.com/retarus/retarus-go/sms
+)
+
+func main() {
+	client := sms.Client{
+		Config: sms.Config{
+			User:     "your-user@mail.de",
+			Password: "your_private_password",
+			Endpoint: sms.DE1,
+		},
+		HTTPClient: http.Client{Timeout: 5 * time.Second},
+	}
+
+	job := sms.Job{
+		Messages: []sms.Message{
+			{
+				Text: "this is a test message",
+				Recipients: []sms.Recipient{
+					{
+						Dst:         "0049176000000000", // number to send to
+						CustomerRef: "retarus",
+					},
+				},
 			},
 		},
 	}
