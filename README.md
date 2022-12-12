@@ -46,8 +46,9 @@ func main() {
 ```
 
 
+
 # Examples
-Further examples can be found in fax/example_test.go
+Further examples can be found in ```fax/example_test.go``` and ```sms/example_test.go```
 
 # Help 
 To get additional help visit our [knowledge center](https://developers.retarus.com/)
