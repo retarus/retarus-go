@@ -24,3 +24,5 @@ const (
 	US1 Endpoint = "https://faxws.us1.retarus.com/rest/v1"
 	US2 Endpoint = "https://faxws.us2.retarus.com/rest/v1"
 )
+// HACK the ...-ha.. servers are only valid for sending only clients
+// as the server, where the final job is processed cannot be determined

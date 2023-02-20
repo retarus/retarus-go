@@ -48,47 +48,53 @@ func main() {
 
 ### Send an example sms job
 ```golang
-package example
+// ...
+client := sms.Client{
+	Config: sms.Config{
+		User:     "your-user@mail.de",
+		Password: "your_private_password",
+		Endpoint: sms.DE1,
+	},
+	HTTPClient: http.Client{Timeout: 5 * time.Second},
+}
 
-import (
-	github.com/retarus/retarus-go/sms
-)
-
-func main() {
-	client := sms.Client{
-		Config: sms.Config{
-			User:     "your-user@mail.de",
-			Password: "your_private_password",
-			Endpoint: sms.DE1,
-		},
-		HTTPClient: http.Client{Timeout: 5 * time.Second},
-	}
-
-	job := sms.Job{
-		Messages: []sms.Message{
-			{
-				Text: "this is a test message",
-				Recipients: []sms.Recipient{
-					{
-						Dst:         "0049176000000000", // number to send to
-						CustomerRef: "retarus",
-					},
+job := sms.Job{
+	Messages: []sms.Message{
+		{
+			Text: "this is a test message",
+			Recipients: []sms.Recipient{
+				{
+					Dst:         "0049176000000000", // number to send to
+					CustomerRef: "retarus",
 				},
 			},
 		},
-	}
-
-	jobID, err := client.Send(job)
-	if err != nil {
-		// log error message
-	}
+	},
 }
+
+jobID, err := client.Send(job)
+// ...
 ```
 
+> **_NOTE:_**  To configure the client we provide the following endpoints:
+> - "https://faxws-ha.de.retarus.com/rest/v1"
+> - "https://faxws.de1.retarus.com/rest/v1"
+> - "https://faxws.de2.retarus.com/rest/v1"
+> ***
+> - "https://faxws-ha.ch.retarus.com/rest/v1"
+> - "https://faxws.ch1.retarus.com/rest/v1"
+> ***
+> - "https://faxws.sg1.retarus.com/rest/v1"
+> - "https://faxws.sg1.retarus.com/rest/v1"
+> ***
+> - "https://faxws-ha.us.retarus.com/rest/v1"
+> - "https://faxws.us1.retarus.com/rest/v1"
+> - "https://faxws.us2.retarus.com/rest/v1"
+>> **_WARN:_** Only choose servers with '...-ha...' if you **do not** want to receive statuses of jobs
 
 
 # Examples
 Further examples can be found in ```fax/example_test.go``` and ```sms/example_test.go```
 
-# Help 
+# Help
 To get additional help visit our [knowledge center](https://developers.retarus.com/)
