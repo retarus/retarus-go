@@ -92,7 +92,7 @@ jobID, err := client.Send(job)
 > - "https://faxws.us2.retarus.com/rest/v1" -> US2
 
 
-> **_WARN:_** <pre> </pre>Only choose servers with ```-ha``` if you **do not** want to receive statuses of jobs
+> **_WARN:_** Only choose servers with ```-ha``` if you **do not** want to receive statuses of jobs
 
 > **_HACK:_** A hacky way to be able to send to the ```-ha``` servers can be found in HACKME.md
 
