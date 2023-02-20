@@ -76,7 +76,7 @@ jobID, err := client.Send(job)
 // ...
 ```
 
-> **_NOTE:_**  To configure the client we provide the following endpoints:
+> **_NOTE:_** To configure the client we provide the following endpoints:
 > - "https://faxws-ha.de.retarus.com/rest/v1" -> DE
 > - "https://faxws.de1.retarus.com/rest/v1" -> DE1
 > - "https://faxws.de2.retarus.com/rest/v1" -> DE2
@@ -92,7 +92,7 @@ jobID, err := client.Send(job)
 > - "https://faxws.us2.retarus.com/rest/v1" -> US2
 
 
-> **_WARN:_** Only choose servers with ```-ha``` if you **do not** want to receive statuses of jobs
+> **_WARN:_** <pre> </pre>Only choose servers with ```-ha``` if you **do not** want to receive statuses of jobs
 
 > **_HACK:_** A hacky way to be able to send to the ```-ha``` servers can be found in HACKME.md
 
