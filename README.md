@@ -76,6 +76,8 @@ jobID, err := client.Send(job)
 // ...
 ```
 
+### configuring the client
+
 > **_NOTE:_** To configure the client we provide the following endpoints:
 > - "https://faxws-ha.de.retarus.com/rest/v1" -> DE
 > - "https://faxws.de1.retarus.com/rest/v1" -> DE1
