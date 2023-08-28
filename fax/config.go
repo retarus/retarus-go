@@ -1,28 +1,70 @@
 package fax
 
+import (
+	"github.com/retarus/retarus-go/common"
+	"log"
+	"os"
+)
+
 type Config struct {
 	User           string
 	Password       string
 	CustomerNumber string
-	Endpoint       Endpoint
+	Region         *common.RegionURI
 }
 
-type Endpoint string
+// NewConfig initializes and returns a Config instance based on the provided parameters.
+//
+// Parameters:
+//   - user: User credential for authentication.
+//   - password: Corresponding password for the user.
+//   - customerNumber: The unique identifier for the customer.
+//   - region: The target service region.
+//
+// Returns:
+//
+//	A populated Config object.
+func NewConfig(user string, password string, customerNumber string, region common.Region) Config {
+	rg, err := common.DetermineServiceRegion(region, "fax")
+	if err != nil {
+		panic(err)
+	}
+	return Config{
+		User:           user,
+		Password:       password,
+		CustomerNumber: customerNumber,
+		Region:         rg,
+	}
+}
 
-const (
-	DE  Endpoint = "https://faxws-ha.de.retarus.com/rest/v1"
-	DE1 Endpoint = "https://faxws.de1.retarus.com/rest/v1"
-	DE2 Endpoint = "https://faxws.de2.retarus.com/rest/v1"
+// NewConfigFromEnv CreateFaxConfig initializes a new FaxConfig using environment variables.
+// It fetches 'retarus_username', 'retarus_password', and 'retarus_cuno'
+// from the environment to set up and authenticate with the fax SDK.
+// Ensure these variables are correctly set in your environment.
+// Parameters:
+//   - region: The target service region.
+//
+// Returns:
+//
+//	A populated Config object.
+func NewConfigFromEnv(region common.Region) Config {
+	username := os.Getenv("retarus_username")
+	password := os.Getenv("retarus_password")
+	customerNumber := os.Getenv("retarus_cuno")
 
-	CH  Endpoint = "https://faxws-ha.ch.retarus.com/rest/v1"
-	CH1 Endpoint = "https://faxws.ch1.retarus.com/rest/v1"
+	if username == "" || password == "" || customerNumber == "" {
+		log.Fatal("One of mandatory env keys are not set, check if following keys set: retarus_username , retarus_password , retarus_cuno")
+		panic("")
+	}
+	rg, err := common.DetermineServiceRegion(region, "fax")
+	if err != nil {
+		panic(err)
+	}
 
-	SG  Endpoint = "https://faxws.sg1.retarus.com/rest/v1"
-	SG1 Endpoint = "https://faxws.sg1.retarus.com/rest/v1"
-
-	US  Endpoint = "https://faxws-ha.us.retarus.com/rest/v1"
-	US1 Endpoint = "https://faxws.us1.retarus.com/rest/v1"
-	US2 Endpoint = "https://faxws.us2.retarus.com/rest/v1"
-)
-// HACK the ...-ha.. servers are only valid for sending only clients
-// as the server, where the final job is processed cannot be determined
+	return Config{
+		User:           username,
+		Password:       password,
+		CustomerNumber: customerNumber,
+		Region:         rg,
+	}
+}

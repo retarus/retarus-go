@@ -31,3 +31,18 @@ type Report struct {
 	// RecipientIDs (required)
 	RecipientIDs []string `json:"recipientIds"`
 }
+
+func (r Report) IsZero() bool {
+	return r.JobID == "" &&
+		r.Src == "" &&
+		r.Encoding == "" &&
+		r.Billcode == "" &&
+		!r.StatusRequested && // da bool default zu false ist
+		!r.Flash && // da bool default zu false ist
+		r.ValidityMin == 0 &&
+		r.CustomerRef == "" &&
+		r.QOS == "" &&
+		r.ReceiptTS.IsZero() && // Für time.Time verwenden wir die Methode IsZero()
+		r.FinishedTS.IsZero() && // Für time.Time verwenden wir die Methode IsZero()
+		len(r.RecipientIDs) == 0 // Für slices überprüfen wir die Länge
+}

@@ -23,6 +23,28 @@ type Job struct {
 	Recipients []Recipient `json:"recipients"`
 }
 
+func NewJob() Job {
+	return Job{}
+}
+
+func (j *Job) AddRecipient(r Recipient) {
+	j.Recipients = append(j.Recipients, r)
+}
+
+// AddRecipients will set the list of recipients, will override already set recipients.
+func (j *Job) AddRecipients(r []Recipient) {
+	j.Recipients = r
+}
+
+func (j *Job) AddDocument(d Document) {
+	j.Documents = append(j.Documents, d)
+}
+
+// AddDocuments will set the list of documents, will override already set documents.
+func (j *Job) AddDocuments(d []Document) {
+	j.Documents = d
+}
+
 type Reference struct {
 	// CustomerDefinedID (optional) Freely-defined ID string (max. 256 characters).
 	CustomerDefinedID string `json:"customerDefinedId,omitempty"`
@@ -55,6 +77,14 @@ type Recipient struct {
 	AlternativeNumbers []string `json:"alternativeNumbers,omitempty"`
 	// Properties (optional) is Personalized data for the cover page.
 	Properties []RecipientProperty `json:"properties,omitempty"`
+}
+
+func NewRecipient(number string, alternativeNumber []string, properties []RecipientProperty) Recipient {
+	return Recipient{
+		number,
+		alternativeNumber,
+		properties,
+	}
 }
 
 // Charset can be used in the Documents struct.

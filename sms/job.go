@@ -16,11 +16,21 @@ type Job struct {
 	Options *Options `json:"options,omitempty"`
 }
 
-type Message struct {
-	// Text (required) to send
-	Text string `json:"text"`
-	// Recipients (required)
-	Recipients []Recipient `json:"recipients"`
+func NewJob(message []Message, options *Options) Job {
+	return Job{
+		message,
+		options,
+	}
+}
+
+// AddMessage will append a message to the Job.
+func (j *Job) AddMessage(m Message) {
+	j.Messages = append(j.Messages, m)
+}
+
+// AddMessages add an array of Messages to the job, but will override all already set messages
+func (j *Job) AddMessages(m []Message) {
+	j.Messages = m
 }
 
 type Recipient struct {
@@ -47,6 +57,28 @@ type Recipient struct {
 	// only they are used. The blackout periods in the Options
 	// are then ignored.
 	BlackoutPeriods []time.Time `json:"blackoutPeriods,omitempty"`
+}
+
+func NewRecipient(destination string, customerRef string, blackout []time.Time) Recipient {
+	return Recipient{
+		destination,
+		customerRef,
+		blackout,
+	}
+}
+
+type Message struct {
+	// Text (required) to send
+	Text string `json:"text"`
+	// Recipients (required)
+	Recipients []Recipient `json:"recipients"`
+}
+
+func NewMessage(text string, recipients []Recipient) Message {
+	return Message{
+		text,
+		recipients,
+	}
 }
 
 type Encoding string
