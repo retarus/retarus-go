@@ -1,6 +1,3 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
 name: Go
 
 on:
@@ -23,3 +20,18 @@ jobs:
 
     - name: Build
       run: go build -v ./...
+
+  testing:
+    runs-on: ubuntu-latest
+    env:
+      retarus_username: ${{secrets.RETARUS_USERNAME}}
+      retarus_password: ${{secrets.RETARUS_PASSWORD}}
+      retarus_cuno: ${{secrets.RETARUS_CUNO}}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+      
+      - run: go test ./...

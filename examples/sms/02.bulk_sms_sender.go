@@ -14,8 +14,8 @@ import (
 
 func main() {
 	// load needed credentials
-	username := os.Getenv("retarus_username")
-	password := os.Getenv("retarus_password")
+	username := os.Getenv("retarus_sms_username")
+	password := os.Getenv("retarus_sms_password")
 
 	// create client and needed config for Retarus SMS-Client
 	config := sms.NewConfig(username, password, common.Europe)

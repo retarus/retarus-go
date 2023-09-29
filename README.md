@@ -1,105 +1,89 @@
-# retarus-go
-The offical Golang SDK provided by Retarus to contact our messaging services.
+## Retarus-Go: 
+The Official Golang Library for Retarus Messaging Services
+Retarus-Go allows you to easily integrate Retarus's suite of messaging services into your Golang applications. Whether you need to send SMS or Fax messages, this library has got you covered.
 
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+    - [Initialize the Client](#initialize-the-client)
+    - [Send an SMS](#send-an-sms)
+    - [Send a Fax](#send-a-fax)
+- [Examples](#examples)
+- [Supported Services](#supported-services)
+- [Regions](#regions)
+- [Help and Support](#help-and-support)
 
+## Installation
 
-# Quickstart
-### Send an example fax job
-```golang
-package example
+To install the Retarus-Go library, run the following command:
 
-import (
-	github.com/retarus/retarus-go/fax
-)
+```bash
+go get github.com/retarus/retarus-go
+```
 
-func main() {
-	client := fax.Client{
-		Config: fax.Config{
-			User:           "your-user@mail.de",
-			Password:       "your_private_password",
-			CustomerNumber: "your-customer-number",
-			Endpoint:       fax.DE,
-		},
-		HTTPClient: http.Client{Timeout: 5 * time.Second},
-	}
+## Usage
 
-	job := fax.Job{
+> [!WARNING]
+> At this time, we do not offer test accounts. Therefore, each test run will incur charges that will be billed to your company account.
+
+### Initialize the Client
+Before making any requests, you'll need to initialize the client. Here's how you can do it, but it is the same for all services:
+```go
+import "github.com/retarus/retarus-go"
+
+// reads the credentials from system env variables.
+config := retarus.fax.NewConfigFromEnv(Europe)
+client := retarus.fax.NewClient(config)
+```
+
+As you'll observe, we employ the NewConfigFromEnv function. This approach utilizes the credentials specified in the operating system's environment variables, necessitating that these values be exported accordingly.
+```bash
+export retarus_username=value
+export retarus_password=value
+export retarus_cuno=yourCuno
+```
+
+### Send a Fax
+Here's a basic example to send a Fax:
+```go
+job := fax.Job{
 		Recipients: []fax.Recipient{
 			{
-				Number: "004989000000000", // number to send to
+				Number: "00498923422342", // number to send to
 			},
 		},
 		Documents: []fax.Document{
 			{
 				Name:      "test.txt", // local document to send
-				Charset:   fax.UTF_8,
-				Reference: "testJob",
-				Data:      "dGVzdGZheAo=", // testfax
+				Data:      "dGVzdGZheAo=", // test fax
 			},
 		},
 	}
-
-	jobID, err := client.Send(job)
-	if err != nil {
-		// log error message
-	}
-}
-```
-
-### Send an example sms job
-```golang
-// ...
-client := sms.Client{
-	Config: sms.Config{
-		User:     "your-user@mail.de",
-		Password: "your_private_password",
-		Endpoint: sms.DE1,
-	},
-	HTTPClient: http.Client{Timeout: 5 * time.Second},
-}
-
-job := sms.Job{
-	Messages: []sms.Message{
-		{
-			Text: "this is a test message",
-			Recipients: []sms.Recipient{
-				{
-					Dst:         "0049176000000000", // number to send to
-					CustomerRef: "retarus",
-				},
-			},
-		},
-	},
-}
-
 jobID, err := client.Send(job)
-// ...
+if err != nil {
+fmt.Println("Error: ", err)
+}
+fmt.Println("JobId: ", jobID)
 ```
+## Examples
+For more comprehensive examples, please refer to the [`examples`](/examples) directory in the repository.
 
-### configuring the client
+## Supported Services
 
-> **_NOTE:_** To configure the client we provide the following endpoints:
-> - "https://faxws-ha.de.retarus.com/rest/v1" -> DE
-> - "https://faxws.de1.retarus.com/rest/v1" -> DE1
-> - "https://faxws.de2.retarus.com/rest/v1" -> DE2
-> ___
-> - "https://faxws-ha.ch.retarus.com/rest/v1" -> CH
-> - "https://faxws.ch1.retarus.com/rest/v1" -> CH2
-> ___
-> - "https://faxws.sg1.retarus.com/rest/v1" -> SG
-> - "https://faxws.sg1.retarus.com/rest/v1" -> SG1
-> ___
-> - "https://faxws-ha.us.retarus.com/rest/v1" -> US
-> - "https://faxws.us1.retarus.com/rest/v1" -> US1
-> - "https://faxws.us2.retarus.com/rest/v1" -> US2
+Retarus-Go currently supports the following services:
 
+- Fax
+- SMS
 
-> **_WARN:_** Only choose servers with ```-ha``` if you **do not** want to receive statuses of jobs
+## Regions
 
-> **_HACK:_** A hacky way to be able to send to the ```-ha``` servers can be found in HACKME.md
+The library allows you to specify a datacenter region when configuring your service client. Supported regions are:
 
-# Examples
-Further examples can be found in ```fax/example_test.go``` and ```sms/example_test.go```
+- Europe
+- America
+- Switzerland
+- Singapore
 
-# Help
-To get additional help visit our [knowledge center](https://developers.retarus.com/)
+## Help and Support
+
+For additional information or to get support, visit our [Knowledge Center](https://developers.retarus.com/).

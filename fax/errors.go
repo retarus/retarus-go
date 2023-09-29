@@ -8,13 +8,13 @@ import (
 )
 
 var (
-	ErrBadRequest          = errors.New("bad request: Client authorization is missing")
-	ErrAuthFailure         = errors.New("authentication failure: bad or missing authentication")
-	ErrNotFound            = errors.New("not found: No job/recipient report available for the given jobId")
-	ErrConflict            = errors.New("conflict: Duplicate job")
-	ErrInternalServerError = errors.New("internal server error: Cannot accept job, cannot query jobReport, cannot list jobs, cannot query recipient report, cannot apply transliteration in the send job")
-	ErrServiceUnavailable  = errors.New("service unavailable: The server is currently unable to handle the request due to a temporary overloading or maintenance of the server.")
-	ErrUnknown             = errors.New("unknown error: Server signals that there was an unknown problem, most likely with the backend adaptor")
+	ErrBadRequest          = errors.New("client Error: Authorization header is missing or incorrect")
+	ErrAuthFailure         = errors.New("authentication Failed: Invalid or missing credentials")
+	ErrNotFound            = errors.New("resource Not Found: No report exists for the specified job ID")
+	ErrConflict            = errors.New("conflict: A job with the same identifier already exists")
+	ErrInternalServerError = errors.New("internal Server Error: Various possible issues including job acceptance, report queries, job listings, and transliteration")
+	ErrServiceUnavailable  = errors.New("service Unavailable: Server is temporarily overloaded or under maintenance")
+	ErrUnknown             = errors.New("unknown Error: An unspecified issue occurred, possibly related to the backend adaptor")
 )
 
 func statusToError(statusCode int, body io.Reader) error {

@@ -54,6 +54,7 @@ func TestNormalSend(t *testing.T) {
 		t.Errorf("Error shouldn't happen here: %s", err)
 	}
 }
+
 func TestGetReport(t *testing.T) {
 	jobId := generateSms(1)
 	client := smsClientProvider()
@@ -78,4 +79,14 @@ func TestGetUnknownReport(t *testing.T) {
 		t.Errorf("Error should happen here")
 	}
 	//fmt.Println("response", err)
+}
+
+func TestGetSmsStatus(t *testing.T) {
+	jobId := generateSms(1)
+	client := smsClientProvider()
+	time.Sleep(time.Duration(8 * time.Second))
+	_, err := client.GetSmsStatus(jobId[0])
+	if err == nil {
+		t.Errorf("Error should happen here")
+	}
 }

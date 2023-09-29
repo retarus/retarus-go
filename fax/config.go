@@ -38,7 +38,7 @@ func NewConfig(user string, password string, customerNumber string, region commo
 }
 
 // NewConfigFromEnv CreateFaxConfig initializes a new FaxConfig using environment variables.
-// It fetches 'retarus_username', 'retarus_password', and 'retarus_cuno'
+// It fetches 'retarus_fax_username', 'retarus_fax_password', and 'retarus_cuno'
 // from the environment to set up and authenticate with the fax SDK.
 // Ensure these variables are correctly set in your environment.
 // Parameters:
@@ -48,8 +48,8 @@ func NewConfig(user string, password string, customerNumber string, region commo
 //
 //	A populated Config object.
 func NewConfigFromEnv(region common.Region) Config {
-	username := os.Getenv("retarus_username")
-	password := os.Getenv("retarus_password")
+	username := os.Getenv("retarus_fax_username")
+	password := os.Getenv("retarus_fax_password")
 	customerNumber := os.Getenv("retarus_cuno")
 
 	if username == "" || password == "" || customerNumber == "" {

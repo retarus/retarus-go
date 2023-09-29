@@ -2,6 +2,7 @@ package common
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -16,11 +17,11 @@ func NewTransporter(timeout int) Transporter {
 	}
 }
 
-type kvParams struct {
-	key, value string
+type KvParams struct {
+	Key, Value string
 }
 
-func (t *Transporter) DoDatacenterFetch(servers []string, username string, password string, body []byte, resource string, method string, params ...kvParams) []*http.Response {
+func (t *Transporter) DoDatacenterFetch(servers []string, username string, password string, body []byte, resource string, method string, params ...KvParams) []*http.Response {
 	ch := make(chan *http.Response)
 	// Start two goroutines to fetch the URLs
 	for _, baseUrl := range servers {
@@ -36,12 +37,13 @@ func (t *Transporter) DoDatacenterFetch(servers []string, username string, passw
 	return responses
 }
 
-func fetch(uri string, body []byte, method string, username string, password string, ch chan<- *http.Response, params ...kvParams) {
+func fetch(uri string, body []byte, method string, username string, password string, ch chan<- *http.Response, params ...KvParams) {
 	req, err := http.NewRequest(method, uri, bytes.NewReader(body))
+	fmt.Println(req.URL)
 	if len(params) > 0 {
 		q := req.URL.Query()
 		for _, p := range params {
-			q.Add(p.key, p.value)
+			q.Add(p.Key, p.Value)
 		}
 		req.URL.RawQuery = q.Encode()
 	}

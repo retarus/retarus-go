@@ -1,0 +1,7 @@
+Dear Mr. {{ firstname }},
+
+Thank you for using Retarus as your service provider, we hope you are happy with us.
+
+Yours sincerly
+
+Your Retarus team

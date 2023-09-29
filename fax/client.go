@@ -3,22 +3,38 @@ package fax
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/retarus/retarus-go/common"
 	"log"
 	"net/http"
 	"net/url"
 )
 
+// Client is responsible for sending fax requests and handling transportation for a fax service.
+// It needs to be properly configured to interact with the service.
+// Note: To create a new instance of FaxClient, use the NewClient function.
 type Client struct {
-	Config      Config
+	// Config holds the configuration settings for the fax client.
+	Config Config
+
+	// Transporter is responsible for the actual HTTP requests and responses.
 	Transporter common.Transporter
 }
 
+// NewClient creates and returns a new FaxClient instance.
+// The client is configured based on the provided Config object.
+// The Transporter is initialized with a default timeout of 5 seconds.
+//
+// This is the preferred way to create a new FaxClient instance.
+//
+// Parameters:
+//   - config: A Config object containing settings like API keys, base URLs, etc.
+//
+// Returns:
+//   - A configured FaxClient object ready to send requests to the fax service.
 func NewClient(config Config) Client {
 	return Client{
 		Config:      config,
-		Transporter: common.NewTransporter(5),
+		Transporter: common.NewTransporter(5), // Initialize transporter with a timeout of 5 seconds
 	}
 }
 
@@ -42,7 +58,6 @@ func (c *Client) Send(job Job) (jobID string, err error) {
 	req.Header.Set("Content-Type", "application/json")
 
 	req.SetBasicAuth(c.Config.User, c.Config.Password)
-
 	resp, err := c.Transporter.HTTPClient.Do(req)
 	if err != nil {
 		log.Fatalf("Error: %s", err)
@@ -84,7 +99,7 @@ func (c *Client) GetBulkReports(jobIDs []string) ([]Report, error) {
 		return nil, err
 	}
 
-	responses := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, bulkBytes, "/fax/reports", http.MethodPost)
+	responses := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, bulkBytes, c.Config.CustomerNumber+"/fax/reports", http.MethodPost)
 	var allReports []Report
 
 	for _, resp := range responses {
@@ -109,6 +124,7 @@ func (c *Client) GetBulkReports(jobIDs []string) ([]Report, error) {
 	return allReports, nil
 }
 
+// Takes in a array of job ids and deletes all job reports which can befoudn with the gievn job ids, the response will contain a boolean which verifys if the reprot was delete or not.
 func (c *Client) DeleteBulkReports(jobIDs []string) ([]DeleteReport, error) {
 	bulkreq := bulkReportRequest{
 		Action: "DELETE",
@@ -120,7 +136,7 @@ func (c *Client) DeleteBulkReports(jobIDs []string) ([]DeleteReport, error) {
 		return nil, err
 	}
 
-	responses := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, bulkBytes, "/fax/reports", http.MethodPost)
+	responses := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, bulkBytes, c.Config.CustomerNumber+"/fax/reports", http.MethodPost)
 	var allDeletedReports []DeleteReport
 
 	for _, resp := range responses {
@@ -150,7 +166,7 @@ func (c *Client) DeleteBulkReports(jobIDs []string) ([]DeleteReport, error) {
 // DeleteReports deletes up to 1000 status reports for completed fax jobs for the current account, starting from the
 // oldest ones. It returns the jobIds of deleted job reports.
 func (c *Client) DeleteReports() ([]DeleteReport, error) {
-	resp := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, []byte{}, "/fax/reports", http.MethodDelete)
+	resp := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, []byte{}, c.Config.CustomerNumber+"/fax/reports", http.MethodDelete)
 
 	type deleteJobResponse struct {
 		Reports []DeleteReport `json:"reports,omitempty"`
@@ -180,7 +196,7 @@ func (c *Client) DeleteReports() ([]DeleteReport, error) {
 
 // DeleteReport deletes a Report for the given jobID.
 func (c *Client) DeleteReport(jobID string) (*DeleteReport, error) {
-	resp := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, []byte{}, "/fax/reports/"+jobID, http.MethodDelete)
+	resp := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, []byte{}, c.Config.CustomerNumber+"/fax/reports/"+jobID, http.MethodDelete)
 	var deleteReport DeleteReport
 	for _, x := range resp {
 		type reports struct {
@@ -206,7 +222,6 @@ func (c *Client) DeleteReport(jobID string) (*DeleteReport, error) {
 // GetReport gets a Report for the given jobID, GetReport will not delete it
 // remotely, use DeleteReport after GetReport.
 func (c *Client) GetReport(jobID string) (*Report, error) {
-	fmt.Println(c.Config.Region.Servers)
 	resp := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, []byte{}, "/"+c.Config.CustomerNumber+"/fax/reports/"+jobID, http.MethodGet)
 	var faxReport Report
 	for _, x := range resp {
@@ -231,7 +246,7 @@ func (c *Client) GetReport(jobID string) (*Report, error) {
 // Important: The results are limited to the oldes 1000 entries. It is recommended to delete
 // the status reports after fetching them in order to retrieve the following ones.
 func (c *Client) GetReports() ([]Report, error) {
-	resp := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, []byte{}, "/fax/reports", http.MethodGet)
+	resp := c.Transporter.DoDatacenterFetch(c.Config.Region.Servers, c.Config.User, c.Config.Password, []byte{}, c.Config.CustomerNumber+"/fax/reports", http.MethodGet)
 
 	var faxReports []Report
 
