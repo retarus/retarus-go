@@ -1,9 +1,10 @@
 package sms
 
 import (
-	"github.com/retarus/retarus-go/common"
 	"log"
 	"os"
+
+	"github.com/retarus/retarus-go/common"
 )
 
 type Config struct {
@@ -53,7 +54,7 @@ func NewConfigFromEnv(region common.Region) Config {
 	username := os.Getenv("retarus_sms_username")
 	password := os.Getenv("retarus_sms_password")
 	if username == "" || password == "" {
-		log.Fatal("One of mandatory env keys are not set, check if following keys set: retarus_username, retarus_password")
+		log.Fatal("One of mandatory env keys are not set, check if following keys set: retarus_sms_username, retarus_sms_password")
 		panic("")
 	}
 	rg, err := common.DetermineServiceRegion(region, "sms")

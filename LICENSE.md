@@ -199,9 +199,3 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
-We use the following libraries, please see their license conditions below:
-
-- fsnotify/fsnotify
-- noirbizarre/gonja
-- urfave/cli/v2

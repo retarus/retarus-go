@@ -1,9 +1,10 @@
 package fax
 
 import (
-	"github.com/retarus/retarus-go/common"
 	"log"
 	"os"
+
+	"github.com/retarus/retarus-go/common"
 )
 
 type Config struct {
@@ -53,7 +54,7 @@ func NewConfigFromEnv(region common.Region) Config {
 	customerNumber := os.Getenv("retarus_cuno")
 
 	if username == "" || password == "" || customerNumber == "" {
-		log.Fatal("One of mandatory env keys are not set, check if following keys set: retarus_username , retarus_password , retarus_cuno")
+		log.Fatal("One of mandatory env keys are not set, check if following keys set: retarus_fax_username , retarus_fax_password , retarus_cuno")
 		panic("")
 	}
 	rg, err := common.DetermineServiceRegion(region, "fax")

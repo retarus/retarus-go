@@ -23,9 +23,6 @@ go get github.com/retarus/retarus-go
 
 ## Usage
 
-> [!WARNING]
-> At this time, we do not offer test accounts. Therefore, each test run will incur charges that will be billed to your company account.
-
 ### Initialize the Client
 Before making any requests, you'll need to initialize the client. Here's how you can do it, but it is the same for all services:
 ```go

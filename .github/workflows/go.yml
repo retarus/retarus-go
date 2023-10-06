@@ -24,9 +24,11 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     env:
-      retarus_username: ${{secrets.RETARUS_USERNAME}}
-      retarus_password: ${{secrets.RETARUS_PASSWORD}}
+      retarus_fax_username: ${{secrets.RETARUS_FAX_USERNAME}}
+      retarus_fax_password: ${{secrets.RETARUS_FAX_PASSWORD}}
       retarus_cuno: ${{secrets.RETARUS_CUNO}}
+      retarus_sms_username: ${{secrets.RETARUS_SMS_USERNAME}}
+      retarus_sms_password: ${{secrets.RETARUS_SMS_PASSWORD}}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Go
