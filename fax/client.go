@@ -3,10 +3,10 @@ package fax
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/retarus/retarus-go/common"
-	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/retarus/retarus-go/common"
 )
 
 // Client is responsible for sending fax requests and handling transportation for a fax service.
@@ -42,17 +42,14 @@ func NewClient(config Config) Client {
 func (c *Client) Send(job Job) (jobID string, err error) {
 	jobBytes, err := json.Marshal(job)
 	if err != nil {
-		log.Fatalf("Error: %s", err)
 		return "", err
 	}
 	u, err := url.JoinPath(string(c.Config.Region.HAAddr), "/", c.Config.CustomerNumber, "/fax")
 	if err != nil {
-		log.Fatalf("Error: %s", err)
 		return "", err
 	}
 	req, err := http.NewRequest(http.MethodPost, u, bytes.NewReader(jobBytes))
 	if err != nil {
-		log.Fatalf("Error: %s", err)
 		return "", err
 	}
 	req.Header.Set("Content-Type", "application/json")
@@ -60,17 +57,13 @@ func (c *Client) Send(job Job) (jobID string, err error) {
 	req.SetBasicAuth(c.Config.User, c.Config.Password)
 	resp, err := c.Transporter.HTTPClient.Do(req)
 	if err != nil {
-		log.Fatalf("Error: %s", err)
-
 		return "", err
 	}
 	defer resp.Body.Close()
 
 	if err := statusToError(resp.StatusCode, resp.Body); err != nil {
-		log.Fatalf("Error: %s", err)
 		return "", err
 	}
-	log.Println(resp.StatusCode)
 
 	type jobResp struct {
 		JobID string `json:"jobId"`
@@ -79,7 +72,6 @@ func (c *Client) Send(job Job) (jobID string, err error) {
 	var jobResponse jobResp
 
 	if err := json.NewDecoder(resp.Body).Decode(&jobResponse); err != nil {
-		log.Fatalf("Error: %s", err)
 		return "", err
 	}
 

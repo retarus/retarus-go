@@ -2,7 +2,6 @@ package common
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -39,7 +38,6 @@ func (t *Transporter) DoDatacenterFetch(servers []string, username string, passw
 
 func fetch(uri string, body []byte, method string, username string, password string, ch chan<- *http.Response, params ...KvParams) {
 	req, err := http.NewRequest(method, uri, bytes.NewReader(body))
-	fmt.Println(req.URL)
 	if len(params) > 0 {
 		q := req.URL.Query()
 		for _, p := range params {
